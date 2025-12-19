@@ -25,17 +25,24 @@ function MyLists({ onLogout, user }) {
 
   const fetchSavedCompanies = async () => {
     try {
+      console.log('Fetching saved companies for user:', user.id);
+      
       const { data, error } = await supabase
         .from('saved_companies')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error details:', error);
+        throw error;
+      }
+      
+      console.log('Fetched companies:', data);
       setSavedCompanies(data || []);
     } catch (err) {
       console.error('Error fetching saved companies:', err);
-      toast.error('Failed to load saved companies');
+      toast.error(`Failed to load saved companies: ${err.message || 'Unknown error'}`);
     }
   };
 
