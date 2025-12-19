@@ -50,8 +50,7 @@ function Dashboard({ onLogout, user, searchState, setSearchState }) {
 
   const fetchSearchTerms = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || '';
-      const response = await fetch(`${apiUrl}/api/search-terms`);
+      const response = await fetch('http://localhost:3001/api/search-terms');
       const data = await response.json();
       setSearchTerms(data.searchTerms || []);
     } catch (err) {
@@ -142,8 +141,7 @@ function Dashboard({ onLogout, user, searchState, setSearchState }) {
         return;
       }
 
-      const apiUrl = import.meta.env.VITE_API_URL || '';
-      const searchPromise = fetch(`${apiUrl}/api/search`, {
+      const searchPromise = fetch('http://localhost:3001/api/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
