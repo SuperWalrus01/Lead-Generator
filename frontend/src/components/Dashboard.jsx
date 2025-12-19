@@ -78,7 +78,19 @@ function Dashboard({ onLogout, user, searchState, setSearchState }) {
 
   const addToMyList = async (company) => {
     try {
-      const { error } = await supabase
+      // Check if user is authenticated
+      if (!user || !user.id) {
+        toast.error('You must be logged in to save companies');
+        return;
+      }
+
+      console.log('Adding company to list:', {
+        user_id: user.id,
+        company_number: company.number,
+        company_name: company.name,
+      });
+
+      const { data, error } = await supabase
         .from('saved_companies')
         .insert([
           {
@@ -93,22 +105,27 @@ function Dashboard({ onLogout, user, searchState, setSearchState }) {
             is_elderly: company.is_elderly,
             link: company.link,
           }
-        ]);
+        ])
+        .select();
 
       if (error) {
+        console.error('Supabase error:', error);
         if (error.code === '23505') {
           toast.error('Company already in your list');
+        } else if (error.code === '42501') {
+          toast.error('Permission denied. Please check your authentication.');
         } else {
-          throw error;
+          toast.error(`Failed to add company: ${error.message}`);
         }
       } else {
+        console.log('Successfully added company:', data);
         toast.success('Added to your list!');
         // Update the saved companies list
         setSavedCompanyNumbers(prev => new Set([...prev, company.number]));
       }
     } catch (err) {
       console.error('Error adding to list:', err);
-      toast.error('Failed to add company');
+      toast.error(`Failed to add company: ${err.message || 'Unknown error'}`);
     }
   };
 
