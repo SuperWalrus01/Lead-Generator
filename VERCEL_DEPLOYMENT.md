@@ -30,3 +30,4 @@ npm run dev:frontend
 # Run backend (in another terminal)
 npm run dev:backend
 ```
+# Last updated: Fri Dec 19 10:55:59 GMT 2025
