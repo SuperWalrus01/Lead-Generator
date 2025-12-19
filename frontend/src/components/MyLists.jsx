@@ -132,7 +132,8 @@ function MyLists({ onLogout, user }) {
         return;
       }
 
-      const generatePromise = fetch('http://localhost:3001/api/generate-email', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const generatePromise = fetch(`${apiUrl}/api/generate-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
